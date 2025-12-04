@@ -11,8 +11,8 @@ class Task(BaseModel, Base):
 
     name = sa.Column(sa.String, nullable=False)
     description = sa.Column(sa.String, nullable=False)
-    priority = sa.Column("priority_type", ENUM("LOW", "MEDIUM", "HIGH", name="priority_type"), nullable=False)
-    status = sa.Column("task_status", ENUM("NEW", "PENDING", "IN_PROGRESS", "COMPLETED", "FAILED", "CANCELLED", name="task_status"), nullable=False)
+    priority = sa.Column("priority_type", ENUM("LOW", "MEDIUM", "HIGH",name="priority_type"), default="LOW", nullable=False)
+    status = sa.Column("task_status", ENUM("NEW", "PENDING", "IN_PROGRESS", "COMPLETED", "FAILED", "CANCELLED", name="task_status"), default="NEW", nullable=False)
     started_at = sa.Column(sa.DateTime)
     completed_at = sa.Column(sa.DateTime)
     result = sa.Column(sa.JSON)

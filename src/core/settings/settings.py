@@ -16,6 +16,13 @@ class Settings(BaseSettings):
     media_path: str
     debug: bool = False
 
+    broker_url: str  = "amqp://celery:celerypassword@localhost:5672/celeryvhost"
+
+
+    @cached_property
+    def result_backend(self) -> str:
+        return "db+" + self.database_sync_url
+
     @cached_property
     def database_url(self) -> str:
         return f"postgresql+asyncpg://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
@@ -24,6 +31,4 @@ class Settings(BaseSettings):
     def database_sync_url(self) -> str:
         return f"postgresql+psycopg2://{self.db_user}:{self.db_password}@{self.db_host}:{self.db_port}/{self.db_name}"
 
-@lru_cache
-def get_settings():
-    return Settings()
+settings = Settings()
