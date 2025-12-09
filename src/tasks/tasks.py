@@ -19,17 +19,28 @@ def process_task(task_id: int) -> Dict[str, Any]:
     with get_sync_session() as session:
         result = session.execute(query)
         task = result.scalar_one_or_none()
+        if not task:
+            raise ValueError(f"Cannot find task with id {task_id}")
         task.started_at = datetime.datetime.now()
         session.commit()
 
-    result_value = g.get()
+    result_value: dict = g.get()
 
     with get_sync_session() as session:
         result = session.execute(query)
         task = result.scalar_one_or_none()
-        task.result = json.dumps({
-            "data": result_value
-        })
+        if not task:
+            raise ValueError(f"Cannot find task with id {task_id}")
+        task.result = json.dumps(
+            {
+                "data": result_value.get("data"),
+            }
+        )
+        task.errors = json.dumps(
+            {
+                "errors": result_value.get("errors")
+            }
+        )
         task.completed_at = datetime.datetime.now()
         task.status = "COMPLETED"
         session.commit()

@@ -11,6 +11,12 @@ def get_random_numbers(count):
         response = requests.get(url, timeout=5)
         response.raise_for_status()
 
-        return response.json()[0]
-    except Exception:
-        return dict()
+        return {
+            "data": response.json()[0],
+            "errors": dict()
+        }
+    except Exception as e:
+        return {
+            "data": list(),
+            "errors": [str(e),]
+        }
